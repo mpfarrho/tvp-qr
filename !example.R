@@ -6,7 +6,6 @@ load("data_raw.rda")
 source("!qrdhs.R")
 
 grid.p <- c(seq(0.05,0.95,by=0.05))
-grid.mod <- c("UC-QR","UC-QR-GP","UC-QR-GPt","UC-SV")
 
 nburn <- 3000
 nsave <- 9000
