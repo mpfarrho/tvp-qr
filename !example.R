@@ -91,6 +91,4 @@ pp <- quant_tmp %>%
         axis.text = element_text(size=16), axis.title = element_text(size=17),
         plot.margin = unit(c(0,1,0,0), "cm"))
 
-# pdf(paste0("!latex_R1/plots/insample/",sl.cn,"_",prior,".pdf"),width=16,height=3)
 print(pp)
-# dev.off()
