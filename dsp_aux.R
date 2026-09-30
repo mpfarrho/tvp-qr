@@ -1,5 +1,6 @@
-# Functions from replication code for Dynamic horseshoe
-# https://rss.onlinelibrary.wiley.com/doi/10.1111/rssb.12325
+# Adapted from the R package 'dsp' (Dynamic Shrinkage Processes) by Daniel R. Kowal,
+# https://github.com/drkowal/dsp, licensed under GPL-2. See Kowal, Matteson and Ruppert (2019),
+# "Dynamic shrinkage processes", JRSS-B 81(4), 781-804, doi:10.1111/rssb.12325.
 
 #----------------------------------------------------------------------------
 #' Sampler for first or second order random walk (RW) Gaussian dynamic linear model (DLM)

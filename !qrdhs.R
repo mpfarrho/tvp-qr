@@ -4,7 +4,7 @@ require(Matrix)
 require(MASS)
 require(spam)
 require(pgdraw)
-Sys.setenv("PKG_CXXFLAGS"="-std=c++11") # mac
+require(stochvol)
 
 # C++ functions
 sourceCpp("ffbs.cpp")   # C++ implementation of FFBS
@@ -157,7 +157,7 @@ tvpqr <- function(Y,X,Xout=NULL,bt_init=NULL,mode="qr",p=0.5,tvp="dhs",sv=FALSE,
       
       draw <- try(t(ffbs(t(as.matrix(y_new)),X_new,matrix(1,T,1),steq_var,K,1,T,matrix(0,K,1),diag(K)*tau0)),silent=TRUE)
       if(is(draw,"try-error")){
-        draw <- ffbs_R(as.matrix(y_new),X_new,matrix(1,T,1),steq_var,K,1,tt,matrix(0,K,1),diag(K)*tau0)
+        draw <- ffbs_R(as.matrix(y_new),X_new,matrix(1,T,1),steq_var,K,1,T,matrix(0,K,1),diag(K)*tau0)
       }
       omega <- diff(draw, differences = D)
       beta0 <- matrix(draw[1:D,], nr = D)
@@ -170,7 +170,7 @@ tvpqr <- function(Y,X,Xout=NULL,bt_init=NULL,mode="qr",p=0.5,tvp="dhs",sv=FALSE,
     }else if(tvp=="shs"){
       draw <- try(t(ffbs(t(as.matrix(y_new)),X_new,matrix(1,T,1),steq_var,K,1,T,matrix(0,K,1),10*diag(K))),silent=TRUE)
       if(is(draw,"try-error")){
-        draw <- ffbs_R(as.matrix(y_new),X_new,matrix(1,T,1),steq_var,K,1,tt,matrix(0,K,1),10*diag(K))
+        draw <- ffbs_R(as.matrix(y_new),X_new,matrix(1,T,1),steq_var,K,1,T,matrix(0,K,1),10*diag(K))
       }
       omega <- rbind(apply(draw,2,function(x){mean(diff(x))}),diff(draw, differences = D))
       for(k in 1:K){
@@ -187,7 +187,7 @@ tvpqr <- function(Y,X,Xout=NULL,bt_init=NULL,mode="qr",p=0.5,tvp="dhs",sv=FALSE,
     }else if(tvp=="iG"){
       draw <- try(t(ffbs(t(as.matrix(y_new)),X_new,matrix(1,T,1),steq_var,K,1,T,matrix(0,K,1),10*diag(K))),silent=TRUE)
       if(is(draw,"try-error")){
-        draw <- ffbs_R(as.matrix(y_new),X_new,matrix(1,T,1),steq_var,K,1,tt,matrix(0,K,1),10*diag(K))
+        draw <- ffbs_R(as.matrix(y_new),X_new,matrix(1,T,1),steq_var,K,1,T,matrix(0,K,1),10*diag(K))
       }
       omega <- diff(draw, differences = D)
       for(k in 1:K){

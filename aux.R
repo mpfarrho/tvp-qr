@@ -7,7 +7,6 @@ ffbs_R <- function(y, Z, Ht, Qtt, m, p, t, B0, V0){
   
   for (i in 1:t){
     R <- Ht[i,] 
-    if(p==1) Qt <- Qtt[i,]*diag(p) else Qt <- diag(Qtt[i,])
     H <- Z[i,,drop = F]
     
     cfe <- y[i] - H%*%bp   # conditional forecast error
@@ -17,6 +16,7 @@ ffbs_R <- function(y, Z, Ht, Qtt, m, p, t, B0, V0){
     btt <- bp + Vp%*%inv_f%*%cfe  #updated mean estimate for btt Vp * inv_F is the Kalman gain
     Vtt <- Vp - Vp%*%inv_f%*%H%*%Vp #updated variance estimate for btt
     if (i < t){
+      Qt <- diag(Qtt[i+1,],m) # row s of Qtt is the variance of b_s - b_{s-1}; row 1 is not used
       bp <- btt
       Vp <- Vtt + Qt
     }
@@ -31,9 +31,9 @@ ffbs_R <- function(y, Z, Ht, Qtt, m, p, t, B0, V0){
   if (is(bdraw.temp, "try-error")) bdraw.temp <- mvrnorm(1, btt, Vtt+diag(1e-6,m))
   bdraw[t,] <- bdraw.temp
   
-  #Now do the backward recurssions
+  #Now do the backward recursions
   for (i in 1:(t-1)){
-    if(p==1) Qt <- Qtt[t-1,]*diag(p) else Qt <- diag(Qtt[t-1,])
+    Qt <- diag(Qtt[t-i+1,],m)
     bf <- t(bdraw[t-i+1,])
     btt <- t(bt[t-i,])
     Vtt <- matrix(Vt[,t-i,drop=FALSE],m,m)

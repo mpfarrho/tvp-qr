@@ -22,8 +22,8 @@ NumericVector ffbs(NumericMatrix y, NumericMatrix Z,NumericMatrix Ht, NumericMat
   arma::mat Vtt(m,m);
   arma::cube test(m,m,t);
   
+  // row s (0-based) of Qtt is the variance of b_s - b_{s-1}; row 0 is not used
   for (int i=1;i<(t+1);++i){
-    arma::mat Qt =diag(Qtt(i-1,_));
     R= Ht(Range((i-1)*p,(i*p)-1),_);
     H = Z(Range((i-1)*p,(i*p)-1),_);
     yt=y(_,i-1);
@@ -32,7 +32,8 @@ NumericVector ffbs(NumericMatrix y, NumericMatrix Z,NumericMatrix Ht, NumericMat
     inv_f =  inv(f);
     btt = bp+Vp*trans(H)*inv_f*cfe; 
     Vtt = Vp-Vp*trans(H)*inv_f*H*Vp;
-    if ((i-1)<t){
+    if (i<t){
+      arma::mat Qt =diag(Qtt(i,_));
       bp=btt;
       Vp=Vtt+Qt;
     }
@@ -45,7 +46,7 @@ NumericVector ffbs(NumericMatrix y, NumericMatrix Z,NumericMatrix Ht, NumericMat
   arma::mat bvar(m,m);
   bdraw.row(t-1)=trans(btt+ trans(arma::chol(Vtt))*Y);
   
-  //backward recurssions
+  //backward recursions
   arma::mat bf(1,m);
   for (int i=1;i<t;++i){
     arma::mat Qt =diag(Qtt(t-i,_));
@@ -64,4 +65,3 @@ NumericVector ffbs(NumericMatrix y, NumericMatrix Z,NumericMatrix Ht, NumericMat
   bdraw=trans(bdraw);
   return wrap(bdraw);
 }
-
